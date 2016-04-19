@@ -16,7 +16,7 @@ To have stats based on Lists :
 
 	./parser.py --action list-stats
 	+-------------------------+--------------------+-----------------------+---------------+
-	| List name               | NB of live card(s) | NB of archive card(s) | Total card(s) |
+	| List name               | NB of live card(s) | NB of archived card(s)| Total card(s) |
 	+-------------------------+--------------------+-----------------------+---------------+
 	| Backlog                 |                 73 |                     2 |            75 |
 	| Backlog for the week    |                 30 |                     0 |            30 |
@@ -33,7 +33,7 @@ To have stats based on Labels :
 
 	./parser.py --action label-stats
 	+---------------------+--------------------+-----------------------+---------------+
-	| Label name          | NB of live card(s) | NB of archive card(s) | Total card(s) |
+	| Label name          | NB of live card(s) | NB of archived card(s)| Total card(s) |
 	+---------------------+--------------------+-----------------------+---------------+
 	| COS                 |                  2 |                     2 |             4 |
 	| July                |                  0 |                     0 |             0 |
@@ -61,7 +61,7 @@ To have stats based on Labels :
 To have stats based on Users :
 
 	+--------------------------+--------------------+-----------------------+---------------+
-	| Username                 | NB of live card(s) | NB of archive card(s) | Total card(s) |
+	| Username                 | NB of live card(s) | NB of archived card(s)| Total card(s) |
 	+--------------------------+--------------------+-----------------------+---------------+
 	| jp.tevoila               |                 10 |                     8 |            18 |
 	| tototoot                 |                  1 |                     0 |             1 |

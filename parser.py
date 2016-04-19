@@ -78,7 +78,7 @@ for ca in data['cards'] :
 if args.action == 'list-stats' :
 
     # Ascii table for List
-    myAsciiTableList = [['List name','NB of live card(s)','NB of archive card(s)','Total card(s)']]
+    myAsciiTableList = [['List name','NB of live card(s)','NB of archived card(s)','Total card(s)']]
     cards_live_total = 0
     cards_arch_total = 0
     cards_total = 0
@@ -109,7 +109,7 @@ if args.action == 'list-stats' :
 if args.action == 'label-stats' :
 
     # Ascii table for Label
-    myAsciiTableLabel = [['Label name','NB of live card(s)','NB of archive card(s)','Total card(s)']]
+    myAsciiTableLabel = [['Label name','NB of live card(s)','NB of archived card(s)','Total card(s)']]
     cards_live_total = 0
     cards_arch_total = 0
     cards_total = 0
@@ -140,7 +140,7 @@ if args.action == 'label-stats' :
 if args.action == 'user-stats' :
     
     # Ascii table for User
-    myAsciiTableUser = [['Username','NB of live card(s)','NB of archive card(s)','Total card(s)']]
+    myAsciiTableUser = [['Username','NB of live card(s)','NB of archived card(s)','Total card(s)']]
     cards_live_total = 0
     cards_arch_total = 0
     cards_total = 0
