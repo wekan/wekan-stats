@@ -2,8 +2,8 @@
 
 Usage :
 
-	/parser.py --help
-	usage: parser.py [-h] [--action {list-stats,label-stats,user-stats}]
+	./get-stats.py --help
+	usage: get-stats.py [-h] [--action {list-stats,label-stats,user-stats}]
     
 	Get some stats on Wekan Dashboard
     
@@ -14,7 +14,7 @@ Usage :
 
 To have stats based on Lists :
 
-	./parser.py --action list-stats
+	./get-stats.py --action list-stats
 	+-------------------------+--------------------+-----------------------+---------------+
 	| List name               | NB of live card(s) | NB of archived card(s)| Total card(s) |
 	+-------------------------+--------------------+-----------------------+---------------+
@@ -31,7 +31,7 @@ To have stats based on Lists :
 
 To have stats based on Labels :
 
-	./parser.py --action label-stats
+	./get-stats.py --action label-stats
 	+---------------------+--------------------+-----------------------+---------------+
 	| Label name          | NB of live card(s) | NB of archived card(s)| Total card(s) |
 	+---------------------+--------------------+-----------------------+---------------+
@@ -60,6 +60,7 @@ To have stats based on Labels :
 
 To have stats based on Users :
 
+	./get-stats.py --action user-stats
 	+--------------------------+--------------------+-----------------------+---------------+
 	| Username                 | NB of live card(s) | NB of archived card(s)| Total card(s) |
 	+--------------------------+--------------------+-----------------------+---------------+

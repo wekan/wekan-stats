@@ -1,0 +1,5 @@
+[GLOBAL]
+application: WekanStats
+
+[WEKAN_JSON]
+my-board: http://wekan.mycompany/wekan-export.json
