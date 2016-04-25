@@ -38,6 +38,7 @@ def main() :
     # Options
     parser = argparse.ArgumentParser(description='Get some stats on Wekan Dashboard')
     parser.add_argument('--action', action='store', dest='action', choices=['list-stats', 'label-stats', 'user-stats'])
+    parser.add_argument('--user', action='store', dest='user', help='Filter on user indicated')
     args = parser.parse_args()
     
     # WsMotor object instance
@@ -51,7 +52,8 @@ def main() :
     dic_wekan = dict()
     for board, url in Config.items('WEKAN_JSON') :
         # Populate dic
-        dic_wekan = inst_wsmotor.export_from_json_to_dic(board,url)
+        inst_wsmotor.get_data_from_json(board, url)
+        dic_wekan = inst_wsmotor.data[ board ]
     
     # Stats on lists
     if args.action == 'list-stats' :
@@ -60,15 +62,15 @@ def main() :
         cards_live_total = 0
         cards_arch_total = 0
         cards_total = 0
-        for li in dic_wekan['lists_sort'].values() :
-            cards_live_total = cards_live_total + len(dic_wekan['lists'][ li ]['cards_live'])
-            cards_arch_total = cards_arch_total + len(dic_wekan['lists'][ li ]['cards_arch'])
-            cards_total = cards_total + len(dic_wekan['lists'][ li ]['cards_live']) + len(dic_wekan['lists'][ li ]['cards_arch'])
+        for (k,v) in sorted(dic_wekan['lists_sort'].items()) :
+            cards_live_total = cards_live_total + len(dic_wekan['lists'][ v ]['cards_live'])
+            cards_arch_total = cards_arch_total + len(dic_wekan['lists'][ v ]['cards_arch'])
+            cards_total = cards_total + len(dic_wekan['lists'][ v ]['cards_live']) + len(dic_wekan['lists'][ v ]['cards_arch'])
             tmpdata = list()
-            tmpdata.append(dic_wekan['lists'][ li ]['name']) # ListName
-            tmpdata.append(str(len(dic_wekan['lists'][ li ]['cards_live']))) # Live cards    
-            tmpdata.append(str(len(dic_wekan['lists'][ li ]['cards_arch']))) # Archive cards
-            tmpdata.append(str(len(dic_wekan['lists'][ li ]['cards_arch'])+len(dic_wekan['lists'][ li ]['cards_live']))) # Total cards    
+            tmpdata.append(dic_wekan['lists'][ v ]['name']) # ListName
+            tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_live']))) # Live cards    
+            tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_arch']))) # Archive cards
+            tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_arch'])+len(dic_wekan['lists'][ v ]['cards_live']))) # Total cards    
             myAsciiTableList.append(tmpdata)
         # Total for List
         tmpdata = list()
@@ -91,15 +93,15 @@ def main() :
         cards_live_total = 0
         cards_arch_total = 0
         cards_total = 0
-        for la in dic_wekan['labels'].values() :
-            cards_live_total = cards_live_total + len(la['cards_live'])
-            cards_arch_total = cards_arch_total + len(la['cards_arch'])
-            cards_total = cards_total + len(la['cards_live']) + len(la['cards_arch'])
+        for (k,v) in sorted(dic_wekan['labels_sort'].items(),reverse=True) :
+            cards_live_total = cards_live_total + len(dic_wekan['labels'][ v ]['cards_live'])
+            cards_arch_total = cards_arch_total + len(dic_wekan['labels'][ v ]['cards_arch'])
+            cards_total = cards_total + len(dic_wekan['labels'][ v ]['cards_live']) + len(dic_wekan['labels'][ v ]['cards_arch'])
             tmpdata = list()
-            tmpdata.append(la['name']) # ListName
-            tmpdata.append(str(len(la['cards_live']))) # Live cards    
-            tmpdata.append(str(len(la['cards_arch']))) # Archive cards
-            tmpdata.append(str(len(la['cards_arch'])+len(la['cards_live']))) # Total cards    
+            tmpdata.append(dic_wekan['labels'][ v ]['name']) # ListName
+            tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_live']))) # Live cards    
+            tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_arch']))) # Archive cards
+            tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_arch'])+len(dic_wekan['labels'][ v ]['cards_live']))) # Total cards    
             myAsciiTableLabel.append(tmpdata)
         # Total for Label
         tmpdata = list()
@@ -122,15 +124,17 @@ def main() :
         cards_live_total = 0
         cards_arch_total = 0
         cards_total = 0
-        for us in dic_wekan['users'].values() :
-            cards_live_total = cards_live_total + len(us['cards_live'])
-            cards_arch_total = cards_arch_total + len(us['cards_arch'])
-            cards_total = cards_total + len(us['cards_live']) + len(us['cards_arch'])
+        for (k,v) in sorted(dic_wekan['users_sort'].items(),reverse=True) :
+            if len(dic_wekan['users'][ v ]['cards_live']) + len(dic_wekan['users'][ v ]['cards_arch']) == 0 :
+                continue
+            cards_live_total = cards_live_total + len(dic_wekan['users'][ v ]['cards_live'])
+            cards_arch_total = cards_arch_total + len(dic_wekan['users'][ v ]['cards_arch'])
+            cards_total = cards_total + len(dic_wekan['users'][ v ]['cards_live']) + len(dic_wekan['users'][ v ]['cards_arch'])
             tmpdata = list()
-            tmpdata.append(us['username']) # UserName
-            tmpdata.append(str(len(us['cards_live']))) # Live cards    
-            tmpdata.append(str(len(us['cards_arch']))) # Archive cards
-            tmpdata.append(str(len(us['cards_arch'])+len(us['cards_live']))) # Total cards    
+            tmpdata.append(dic_wekan['users'][ v ]['username']) # Username
+            tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_live']))) # Live cards    
+            tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_arch']))) # Archive cards
+            tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_arch'])+len(dic_wekan['users'][ v ]['cards_live']))) # Total cards    
             myAsciiTableUser.append(tmpdata)
         # Total for User
         tmpdata = list()
