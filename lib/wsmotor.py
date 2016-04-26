@@ -24,6 +24,62 @@ class WsMotor :
 
         return self.__class__.__name__
     
+    def add_card_into_user_dic(self, board, card) :
+        """Method that will add card into user dict"""
+        
+        # Populate users
+        for user in card['members'] :
+            if card['archived'] == False :
+                self.data[ board ]['users'][ user ]['cards_live'].append(card['_id'])
+            else :
+                self.data[ board ]['users'][ user ]['cards_arch'].append(card['_id'])
+
+    def add_card_into_label_dic(self, board, card) :
+        """Method that will add card into label dict"""
+        
+        # Populate labels
+        for label in card['labelIds'] :
+            if card['archived'] == False :
+                self.data[ board ]['labels'][ label ]['cards_live'].append(card['_id'])
+            else :
+                self.data[ board ]['labels'][ label ]['cards_arch'].append(card['_id'])
+
+    def add_card_into_list_dic(self, board, card) :
+        """Method that will add card into list dict"""
+        
+        # Populate list
+        if card['archived'] == False :
+            self.data[ board ]['lists'][ card['listId'] ]['cards_live'].append(card['_id'])
+        else :
+            self.data[ board ]['lists'][ card['listId'] ]['cards_arch'].append(card['_id'])
+
+    def add_event_into_user_dic(self, board, event) :
+        """Method that will add event into user dict"""
+        
+        # Populate user dict
+        if not event['activityType'] in self.data[ board ]['users'][ event['userId'] ]['events']['type'].keys() :
+            self.data[ board ]['users'][ event['userId'] ]['events']['type'][ event['activityType'] ] = list()
+        self.data[ board ]['users'][ event['userId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])    
+        self.data[ board ]['users'][ event['userId'] ]['events']['all'].append(event['_id'])
+    
+    def add_event_into_list_dic(self, board, event) :
+        """Method that will add event into list dict"""
+        
+        # Populate list dict
+        if not event['activityType'] in self.data[ board ]['lists'][ event['listId'] ]['events']['type'].keys() :
+            self.data[ board ]['lists'][ event['listId'] ]['events']['type'][ event['activityType'] ] = list()
+        self.data[ board ]['lists'][ event['listId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])    
+        self.data[ board ]['lists'][ event['listId'] ]['events']['all'].append(event['_id'])
+
+    def add_event_into_card_dic(self, board, event) :
+        """Method that will add event into card dict"""
+        
+        # Populate list dict
+        if not event['activityType'] in self.data[ board ]['cards'][ event['cardId'] ]['events']['type'].keys() :
+            self.data[ board ]['cards'][ event['cardId'] ]['events']['type'][ event['activityType'] ] = list()
+        self.data[ board ]['cards'][ event['cardId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])    
+        self.data[ board ]['cards'][ event['cardId'] ]['events']['all'].append(event['_id'])
+
     def order_dic_per_cards_nb(self, board, branch) :
         """Method to order dic with cards_live values - new dic self.data[ board ][ branch_sort ] will be created"""
     
@@ -52,6 +108,9 @@ class WsMotor :
             self.data[ board ]['users'][ us['_id'] ]['username'] = us['username']
             self.data[ board ]['users'][ us['_id'] ]['cards_live'] = list()
             self.data[ board ]['users'][ us['_id'] ]['cards_arch'] = list()
+            self.data[ board ]['users'][ us['_id'] ]['events'] = dict()
+            self.data[ board ]['users'][ us['_id'] ]['events']['all'] = list()
+            self.data[ board ]['users'][ us['_id'] ]['events']['type'] = dict()
 
         # Parsing of JSON lists
         self.data[ board ]['lists'] = dict()
@@ -63,6 +122,9 @@ class WsMotor :
             self.data[ board ]['lists'][ li['_id'] ]['name'] = li['title']
             self.data[ board ]['lists'][ li['_id'] ]['cards_live'] = list()
             self.data[ board ]['lists'][ li['_id'] ]['cards_arch'] = list()
+            self.data[ board ]['lists'][ li['_id'] ]['events'] = dict()
+            self.data[ board ]['lists'][ li['_id'] ]['events']['all'] = list()
+            self.data[ board ]['lists'][ li['_id'] ]['events']['type'] = dict()
 
         # Parsing of JSON labels
         self.data[ board ]['labels'] = dict()
@@ -81,24 +143,31 @@ class WsMotor :
             self.logger.debug('Board %s - Add "%s" card with id %s into dict', board, ca['title'], ca['_id'])
             self.data[ board ]['cards'][ ca['_id'] ] = dict()
             self.data[ board ]['cards'][ ca['_id'] ]['title'] = ca['title']
+            self.data[ board ]['cards'][ ca['_id'] ]['events'] = dict()
+            self.data[ board ]['cards'][ ca['_id'] ]['events']['all'] = list()
+            self.data[ board ]['cards'][ ca['_id'] ]['events']['type'] = dict()
             # Populate list
-            if ca['archived'] == False :
-                self.data[ board ]['lists'][ ca['listId'] ]['cards_live'].append(ca['_id'])
-            else :
-                self.data[ board ]['lists'][ ca['listId'] ]['cards_arch'].append(ca['_id'])
-    
+            self.add_card_into_list_dic(board,ca)
             # Populate labels
-            for lab in ca['labelIds'] :
-                if ca['archived'] == False :
-                    self.data[ board ]['labels'][ lab ]['cards_live'].append(ca['_id'])
-                else :
-                    self.data[ board ]['labels'][ lab ]['cards_arch'].append(ca['_id'])
+            self.add_card_into_label_dic(board,ca)
             # Populate users
-            for mem in ca['members'] :
-                if ca['archived'] == False :
-                    self.data[ board ]['users'][ mem ]['cards_live'].append(ca['_id'])
-                else :
-                    self.data[ board ]['users'][ mem ]['cards_arch'].append(ca['_id'])
+            self.add_card_into_user_dic(board,ca)
+        
+        # Parsing of JSON events
+        self.data[ board ]['events'] = dict()
+        for ev in data_json['activities'] :
+            self.logger.debug('Board %s - Add event type "%s" with id %s into dict', board, ev['activityType'], ev['_id'])
+            self.data[ board ]['events'][ ev['_id'] ] = dict()
+            self.data[ board ]['events'][ ev['_id'] ]['type'] = ev['activityType']
+            self.data[ board ]['events'][ ev['_id'] ]['created'] = ev['createdAt']
+            # Populate user
+            self.add_event_into_user_dic(board,ev)
+            # Populate list if needed
+            if 'listId' in ev.keys() :
+                self.add_event_into_list_dic(board,ev)
+            # Populate card if needed
+            if 'cardId' in ev.keys() :
+                self.add_event_into_card_dic(board,ev)
         
         # Order
         self.order_dic_per_cards_nb(board,'labels')

@@ -58,16 +58,19 @@ def main() :
     # Stats on lists
     if args.action == 'list-stats' :
         # Ascii table for List
-        myAsciiTableList = [['List name','NB of live card(s)','NB of archived card(s)','Total card(s)']]
+        myAsciiTableList = [['List name','Event(s) generated','NB of live card(s)','NB of archived card(s)','Total card(s)']]
+        events_total = 0
         cards_live_total = 0
         cards_arch_total = 0
         cards_total = 0
         for (k,v) in sorted(dic_wekan['lists_sort'].items()) :
+            events_total = events_total + len(dic_wekan['lists'][ v ]['events']['all'])
             cards_live_total = cards_live_total + len(dic_wekan['lists'][ v ]['cards_live'])
             cards_arch_total = cards_arch_total + len(dic_wekan['lists'][ v ]['cards_arch'])
             cards_total = cards_total + len(dic_wekan['lists'][ v ]['cards_live']) + len(dic_wekan['lists'][ v ]['cards_arch'])
             tmpdata = list()
             tmpdata.append(dic_wekan['lists'][ v ]['name']) # ListName
+            tmpdata.append(str(len(dic_wekan['lists'][ v ]['events']['all']))) # Total events 
             tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_live']))) # Live cards    
             tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_arch']))) # Archive cards
             tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_arch'])+len(dic_wekan['lists'][ v ]['cards_live']))) # Total cards    
@@ -75,6 +78,7 @@ def main() :
         # Total for List
         tmpdata = list()
         tmpdata.append("Total : " + str(len(myAsciiTableList) - 1) + " list(s)")
+        tmpdata.append(str(events_total))
         tmpdata.append(str(cards_live_total))
         tmpdata.append(str(cards_arch_total))
         tmpdata.append(str(cards_total))
@@ -82,7 +86,7 @@ def main() :
         # Create AsciiTable for List
         myTable = AsciiTable(myAsciiTableList)
         myTable.inner_footing_row_border = True
-        myTable.justify_columns[1] = myTable.justify_columns[2] = myTable.justify_columns[3] = 'right'
+        myTable.justify_columns[1] = myTable.justify_columns[2] = myTable.justify_columns[3] = myTable.justify_columns[4] = 'right'
         # Output data
         print myTable.table
     
@@ -120,25 +124,30 @@ def main() :
     # Stats on users
     if args.action == 'user-stats' :
         # Ascii table for User
-        myAsciiTableUser = [['Username','NB of live card(s)','NB of archived card(s)','Total card(s)']]
+        myAsciiTableUser = [['Username','Event(s) generated','NB of live card(s)','NB of archived card(s)','Total card(s)']]
+        events_total = 0
         cards_live_total = 0
         cards_arch_total = 0
         cards_total = 0
         for (k,v) in sorted(dic_wekan['users_sort'].items(),reverse=True) :
             if len(dic_wekan['users'][ v ]['cards_live']) + len(dic_wekan['users'][ v ]['cards_arch']) == 0 :
                 continue
+            events_total = events_total + len(dic_wekan['users'][ v ]['events']['all'])
             cards_live_total = cards_live_total + len(dic_wekan['users'][ v ]['cards_live'])
             cards_arch_total = cards_arch_total + len(dic_wekan['users'][ v ]['cards_arch'])
             cards_total = cards_total + len(dic_wekan['users'][ v ]['cards_live']) + len(dic_wekan['users'][ v ]['cards_arch'])
             tmpdata = list()
             tmpdata.append(dic_wekan['users'][ v ]['username']) # Username
+            tmpdata.append(str(len(dic_wekan['users'][ v ]['events']['all']))) # Total events 
             tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_live']))) # Live cards    
             tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_arch']))) # Archive cards
-            tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_arch'])+len(dic_wekan['users'][ v ]['cards_live']))) # Total cards    
+            tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_arch'])+len(dic_wekan['users'][ v ]['cards_live']))) # Total cards
+            
             myAsciiTableUser.append(tmpdata)
-        # Total for User
+        # Total for users
         tmpdata = list()
         tmpdata.append("Total : " + str(len(myAsciiTableUser) - 1) + " User(s)")
+        tmpdata.append(str(events_total))
         tmpdata.append(str(cards_live_total))
         tmpdata.append(str(cards_arch_total))
         tmpdata.append(str(cards_total))
@@ -146,7 +155,7 @@ def main() :
         # Create AsciiTable for Label
         myTable = AsciiTable(myAsciiTableUser)
         myTable.inner_footing_row_border = True
-        myTable.justify_columns[1] = myTable.justify_columns[2] = myTable.justify_columns[3] = 'right'
+        myTable.justify_columns[1] = myTable.justify_columns[2] = myTable.justify_columns[3] = myTable.justify_columns[4] = 'right'
         # Output data
         print myTable.table
 
