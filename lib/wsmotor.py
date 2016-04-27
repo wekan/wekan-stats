@@ -154,12 +154,17 @@ class WsMotor :
             self.add_card_into_user_dic(board,ca)
         
         # Parsing of JSON events
-        self.data[ board ]['events'] = dict()
+        self.data[ board ]['events'] = {'all': dict(),'type': dict()}
         for ev in data_json['activities'] :
-            self.logger.debug('Board %s - Add event type "%s" with id %s into dict', board, ev['activityType'], ev['_id'])
-            self.data[ board ]['events'][ ev['_id'] ] = dict()
-            self.data[ board ]['events'][ ev['_id'] ]['type'] = ev['activityType']
-            self.data[ board ]['events'][ ev['_id'] ]['created'] = ev['createdAt']
+            # Populate dict all
+            self.logger.debug('Board %s - Add event type "%s" with id %s into events dict', board, ev['activityType'], ev['_id'])
+            self.data[ board ]['events']['all'][ ev['_id'] ] = dict()
+            self.data[ board ]['events']['all'][ ev['_id'] ]['type'] = ev['activityType']
+            self.data[ board ]['events']['all'][ ev['_id'] ]['created'] = ev['createdAt']
+            # Populate dict type
+            if not ev['activityType'] in self.data[ board ]['events']['type'].keys() :
+                self.data[ board ]['events']['type'][ ev['activityType'] ] = list()
+            self.data[ board ]['events']['type'][ ev['activityType'] ].append(ev['_id'])
             # Populate user
             self.add_event_into_user_dic(board,ev)
             # Populate list if needed

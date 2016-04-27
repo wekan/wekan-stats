@@ -37,23 +37,25 @@ def main() :
 
     # Options
     parser = argparse.ArgumentParser(description='Get some stats on Wekan Dashboard')
-    parser.add_argument('--action', action='store', dest='action', choices=['list-stats', 'label-stats', 'user-stats'])
-    parser.add_argument('--user', action='store', dest='user', help='Filter on user indicated')
+    parser.add_argument('--board', action='store', dest='board', help='Board name indicated in ini file - Example : my-board')
+    parser.add_argument('--action', action='store', dest='action', choices=['list-stats', 'label-stats', 'user-stats', 'event-stats'])
     args = parser.parse_args()
     
     # WsMotor object instance
     try :
-        inst_wsmotor = WsMotor(Config.get('GLOBAL','application'))  
+        
+        inst_wsmotor = WsMotor(Config.get('GLOBAL','application'))
+        # Parse JSON Wekan URLs and populate dict - 
+        dic_wekan = dict()
+        for board, url in Config.items('WEKAN_JSON') :
+            # Populate dic
+            inst_wsmotor.get_data_from_json(board, url)
+        # Get boad data
+        dic_wekan = inst_wsmotor.data[ args.board ]
+        
     except Exception as e :
         logger.error('RunTimeError during instance creation : %s', str(e))
         raise RuntimeError('Exception during instance creation : ' + str(e))
-    
-    # Parse JSON Wekan URLs and populate dict - 
-    dic_wekan = dict()
-    for board, url in Config.items('WEKAN_JSON') :
-        # Populate dic
-        inst_wsmotor.get_data_from_json(board, url)
-        dic_wekan = inst_wsmotor.data[ board ]
     
     # Stats on lists
     if args.action == 'list-stats' :
@@ -152,10 +154,33 @@ def main() :
         tmpdata.append(str(cards_arch_total))
         tmpdata.append(str(cards_total))
         myAsciiTableUser.append(tmpdata)
-        # Create AsciiTable for Label
+        # Create AsciiTable for User
         myTable = AsciiTable(myAsciiTableUser)
         myTable.inner_footing_row_border = True
         myTable.justify_columns[1] = myTable.justify_columns[2] = myTable.justify_columns[3] = myTable.justify_columns[4] = 'right'
+        # Output data
+        print myTable.table
+    
+    # Stats on events
+    if args.action == 'event-stats' :
+        # Ascii table for Label
+        myAsciiEventLabel = [['Event name','NB of event(s)']]
+        events_total = 0
+        for (k,v) in dic_wekan['events']['type'].items() :
+            events_total = events_total + len(dic_wekan['events']['type'][ k ])
+            tmpdata = list()
+            tmpdata.append(k) # Event name
+            tmpdata.append(str(len(dic_wekan['events']['type'][ k ]))) # Events count    
+            myAsciiEventLabel.append(tmpdata)
+        # Total for Events
+        tmpdata = list()
+        tmpdata.append("Total : " + str(len(myAsciiEventLabel) - 1) + " Event(s)")
+        tmpdata.append(str(events_total))
+        myAsciiEventLabel.append(tmpdata)
+        # Create AsciiTable for Label
+        myTable = AsciiTable(myAsciiEventLabel)
+        myTable.inner_footing_row_border = True
+        myTable.justify_columns[1] = myTable.justify_columns[2] = 'right'
         # Output data
         print myTable.table
 
