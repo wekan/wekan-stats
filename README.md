@@ -2,15 +2,16 @@
 
 Usage :
 
-	./get-stats.py --help
-	usage: get-stats.py [-h] [--action {list-stats,label-stats,user-stats}]
+	./get-stats.py  -h
+    usage: get-stats.py [-h] [--board BOARD]
+                    [--action {list-stats,label-stats,user-stats,event-stats}]
+     
+    Get some stats on Wekan Dashboard
     
-	Get some stats on Wekan Dashboard
-    
-	optional arguments:
-	  -h, --help            show this help message and exit
-	  --action {list-stats,label-stats,user-stats}
-
+    optional arguments:
+    -h, --help            show this help message and exit
+    --board BOARD         Board name indicated in ini file - Example : my-board
+    --action {list-stats,label-stats,user-stats,event-stats}
 
 To have stats based on Lists :
 
@@ -46,7 +47,7 @@ To have stats based on Labels :
 	| TG                  |                 87 |                     80 |           167 |
 	| UNIX                |                 86 |                     76 |           162 |
 	| NewHome             |                 37 |                     27 |            64 |
-	| BURGER              |                 23 |                     15 |            38 |
+	| ITAAP               |                 23 |                     15 |            38 |
 	| NOS                 |                 20 |                     24 |            44 |
 	| Puppet              |                 17 |                      7 |            24 |
 	| MNG                 |                 10 |                      8 |            18 |
