@@ -37,21 +37,29 @@ def main() :
 
     # Options
     parser = argparse.ArgumentParser(description='Get some stats on Wekan Dashboard')
-    parser.add_argument('--board', action='store', dest='board', help='Board name indicated in ini file - Example : my-board')
-    parser.add_argument('--action', action='store', dest='action', choices=['list-stats', 'label-stats', 'user-stats', 'event-stats'])
+    parser.add_argument('--board', action='store', dest='board', help='Board name indicated in ini file - Example : my-board', required=True)
+    parser.add_argument('--action', action='store', dest='action', choices=['list-stats', 'label-stats', 'user-stats', 'event-stats'], required=True)
     args = parser.parse_args()
     
     # WsMotor object instance
     try :
         
         inst_wsmotor = WsMotor(Config.get('GLOBAL','application'))
-        # Parse JSON Wekan URLs and populate dict - 
+       
+        # Parse JSON Wekan URLs and populate dict 
         dic_wekan = dict()
         for board, url in Config.items('WEKAN_JSON') :
+            # Is it board that we want ?
+            if board != args.board :
+                continue
             # Populate dic
             inst_wsmotor.get_data_from_json(board, url)
-        # Get boad data
-        dic_wekan = inst_wsmotor.data[ args.board ]
+            # Get boad data
+            dic_wekan = inst_wsmotor.data[ args.board ]
+        
+        # Board not found
+        if len(dic_wekan) == 0 :
+            raise RuntimeError('Board "' + args.board + '" not found in ini file :(')
         
     except Exception as e :
         logger.error('RunTimeError during instance creation : %s', str(e))

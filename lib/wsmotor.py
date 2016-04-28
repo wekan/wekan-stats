@@ -83,17 +83,27 @@ class WsMotor :
     def order_dic_per_cards_nb(self, board, branch) :
         """Method to order dic with cards_live values - new dic self.data[ board ][ branch_sort ] will be created"""
     
-        self.logger.info('Will order for a board %s class dic branch %s', board, branch)
+        self.logger.info('Ordering dictionnary "%s" for board "%s"', branch,  board)
         # Create dic for order
         self.data[ board ][ branch + '_sort' ] = dict()
         # Parse branch
         for key, value in self.data[ board ][ branch ].items() :
             self.data[ board ][ branch + '_sort' ][ len(value['cards_live'])*1000+random.randrange(1,999) ] = key
     
+    def order_dic_cards(self, board) :
+        """Method to order dic cards - new dic self.data[ board ][ cards_sort ] will be created"""
+    
+        self.logger.info('Ordering dictionnary "cards" for board "%s"',  board)
+        # Create dic for order
+        self.data[ board ]['cards_sort' ] = dict()
+        # Parse branch
+        for key, value in self.data[ board ]['cards'].items() :
+            self.data[ board ]['cards_sort' ][ value['sort']*1000+random.randrange(1,999) ] = key
+    
     def get_data_from_json(self, board, url_json) :
         """Method to export JSON Wekan URL to a dictionary : """
         
-        self.logger.info('Will export below JSON Wekan URL for board %s to a class dic : %s', board, url_json)
+        self.logger.info('Exporting JSON Wekan URL for board "%s" to a class dic : %s', board, url_json)
         # Get data from JSON URL
         file = urllib.urlopen(url_json)
         data_json = json.load(file)
@@ -143,6 +153,10 @@ class WsMotor :
             self.logger.debug('Board %s - Add "%s" card with id %s into dict', board, ca['title'], ca['_id'])
             self.data[ board ]['cards'][ ca['_id'] ] = dict()
             self.data[ board ]['cards'][ ca['_id'] ]['title'] = ca['title']
+            self.data[ board ]['cards'][ ca['_id'] ]['archived'] = ca['archived']
+            self.data[ board ]['cards'][ ca['_id'] ]['sort'] = ca['sort']
+            self.data[ board ]['cards'][ ca['_id'] ]['created'] = ca['createdAt']
+            self.data[ board ]['cards'][ ca['_id'] ]['lastupdate'] = ca['dateLastActivity']
             self.data[ board ]['cards'][ ca['_id'] ]['events'] = dict()
             self.data[ board ]['cards'][ ca['_id'] ]['events']['all'] = list()
             self.data[ board ]['cards'][ ca['_id'] ]['events']['type'] = dict()
@@ -177,6 +191,7 @@ class WsMotor :
         # Order
         self.order_dic_per_cards_nb(board,'labels')
         self.order_dic_per_cards_nb(board,'users')
+        self.order_dic_cards(board)
         
         # Close file
         file.close()
