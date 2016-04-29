@@ -39,6 +39,9 @@ def main() :
     parser = argparse.ArgumentParser(description='Get cards list of Wekan Dashboard')
     parser.add_argument('--board', action='store', dest='board', help='Board name indicated in ini file - Example : my-board', required=True)
     parser.add_argument('--card-type', action='store', dest='card_type', choices=['live', 'archived', 'all'], help='Kind of cards to get')
+    parser.add_argument('--username', action='store', dest='username')
+    parser.add_argument('--list', action='store', dest='list')
+
     args = parser.parse_args()
     
     # WsMotor object instance
@@ -67,27 +70,56 @@ def main() :
 
 
     # Ok get cards info
-    myAsciiTableCard = [['Card title','Archived','Created Date','Last Update','NB of event(s)']]
+    myAsciiTableCard = [['Card title','List','Archived','Member(s)','Labek(s)','Created Date','NB of event(s)']]
     events_total = 0
     for (k,v) in sorted(dic_wekan['cards_sort'].items(),reverse=False) :
         if args.card_type == 'live' and dic_wekan['cards'][ v ]['archived'] == True :
             continue
         if args.card_type == 'archived' and dic_wekan['cards'][ v ]['archived'] == False :
             continue
+        if args.username :
+            username_found = False
+            for mem in dic_wekan['cards'][ v ]['members'] :
+                if dic_wekan['users'][ mem ]['username'] == args.username :
+                     username_found = True
+            if username_found == False :
+                continue
+        if args.list and dic_wekan['lists'][ dic_wekan['cards'][ v ]['list'] ]['name'] != args.list :
+            continue
         events_total = events_total + len(dic_wekan['cards'][ v ]['events']['all'])
         tmpdata = list()
-        tmpdata.append(dic_wekan['cards'][ v ]['title'][0:80]) # Task name
+        tmpdata.append(dic_wekan['cards'][ v ]['title'][0:80]) # Card name
+        # List
+        tmpdata.append(str(dic_wekan['lists'][ dic_wekan['cards'][ v ]['list'] ]['name']))
+        # Archived or Live
         if dic_wekan['cards'][ v ]['archived'] == False :
             tmpdata.append('No') # Live cards
         else :
             tmpdata.append('Yes') # Archived cards
+        # Members
+        members = ''
+        for mem in dic_wekan['cards'][ v ]['members'] :
+            if members == '' :
+                members = dic_wekan['users'][ mem ]['username']
+            else :
+                members = members + "\n" + dic_wekan['users'][ mem ]['username']
+        tmpdata.append(str(members))
+        # Labels
+        labels = ''
+        for lab in dic_wekan['cards'][ v ]['labels'] :
+            if labels == '' :
+                labels = dic_wekan['labels'][ lab ]['name']
+            else :
+                labels = labels + " - " + dic_wekan['labels'][ lab ]['name']
+        tmpdata.append(str(labels))
         tmpdata.append(str(dic_wekan['cards'][ v ]['created'][0:10])) # Date of creation    
-        tmpdata.append(str(dic_wekan['cards'][ v ]['lastupdate'][0:10])) # Date of last update    
         tmpdata.append(str(len(dic_wekan['cards'][ v ]['events']['all']))) # Events nb
         myAsciiTableCard.append(tmpdata)
     # Total for Card
     tmpdata = list()
     tmpdata.append("Total : " + str(len(myAsciiTableCard) - 1) + " card(s)")
+    tmpdata.append("")
+    tmpdata.append("")
     tmpdata.append("")
     tmpdata.append("")
     tmpdata.append("")
@@ -97,6 +129,7 @@ def main() :
     myTable = AsciiTable(myAsciiTableCard)
     myTable.inner_footing_row_border = True
     myTable.justify_columns[1] = myTable.justify_columns[2] = myTable.justify_columns[3] = myTable.justify_columns[4] = 'right'
+    myTable.justify_columns[5] = myTable.justify_columns[6] = 'right'
     # Output data
     print myTable.table
     

@@ -155,6 +155,9 @@ class WsMotor :
             self.data[ board ]['cards'][ ca['_id'] ]['title'] = ca['title']
             self.data[ board ]['cards'][ ca['_id'] ]['archived'] = ca['archived']
             self.data[ board ]['cards'][ ca['_id'] ]['sort'] = ca['sort']
+            self.data[ board ]['cards'][ ca['_id'] ]['members'] = ca['members']
+            self.data[ board ]['cards'][ ca['_id'] ]['labels'] = ca['labelIds']
+            self.data[ board ]['cards'][ ca['_id'] ]['list'] = ca['listId']
             self.data[ board ]['cards'][ ca['_id'] ]['created'] = ca['createdAt']
             self.data[ board ]['cards'][ ca['_id'] ]['lastupdate'] = ca['dateLastActivity']
             self.data[ board ]['cards'][ ca['_id'] ]['events'] = dict()
