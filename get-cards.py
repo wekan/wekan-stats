@@ -112,7 +112,7 @@ def main() :
             else :
                 labels = labels + " - " + dic_wekan['labels'][ lab ]['name']
         tmpdata.append(str(labels))
-        tmpdata.append(str(dic_wekan['cards'][ v ]['created'][0:10])) # Date of creation    
+        tmpdata.append(str(dic_wekan['cards'][ v ]['created'][0:10].encode('utf8'))) # Date of creation    
         tmpdata.append(str(len(dic_wekan['cards'][ v ]['events']['all']))) # Events nb
         myAsciiTableCard.append(tmpdata)
     # Total for Card
