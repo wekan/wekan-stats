@@ -88,7 +88,7 @@ def main() :
             continue
         events_total = events_total + len(dic_wekan['cards'][ v ]['events']['all'])
         tmpdata = list()
-        tmpdata.append(str(dic_wekan['cards'][ v ]['title'][0:80])) # Card name
+        tmpdata.append(str(dic_wekan['cards'][ v ]['title'][0:80].encode('utf8'))) # Card name
         # List
         tmpdata.append(str(dic_wekan['lists'][ dic_wekan['cards'][ v ]['list'] ]['name']))
         # Archived or Live
@@ -112,7 +112,7 @@ def main() :
             else :
                 labels = labels + " - " + dic_wekan['labels'][ lab ]['name']
         tmpdata.append(str(labels))
-        tmpdata.append(str(dic_wekan['cards'][ v ]['created'][0:10].encode('utf8'))) # Date of creation    
+        tmpdata.append(str(dic_wekan['cards'][ v ]['created'][0:10])) # Date of creation    
         tmpdata.append(str(len(dic_wekan['cards'][ v ]['events']['all']))) # Events nb
         myAsciiTableCard.append(tmpdata)
     # Total for Card
