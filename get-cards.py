@@ -88,7 +88,7 @@ def main() :
             continue
         events_total = events_total + len(dic_wekan['cards'][ v ]['events']['all'])
         tmpdata = list()
-        tmpdata.append(dic_wekan['cards'][ v ]['title'][0:80]) # Card name
+        tmpdata.append(str(dic_wekan['cards'][ v ]['title'][0:80])) # Card name
         # List
         tmpdata.append(str(dic_wekan['lists'][ dic_wekan['cards'][ v ]['list'] ]['name']))
         # Archived or Live
