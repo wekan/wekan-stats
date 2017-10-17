@@ -1,5 +1,7 @@
 # WekanStats
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58cb5a80d08e4c94b5296e52220bc943)](https://www.codacy.com/app/fmonthel/wekan-stats?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fmonthel/wekan-stats&amp;utm_campaign=Badge_Grade)
+
 Usage :
 
 	./get-stats.py  -h

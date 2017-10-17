@@ -8,7 +8,7 @@ import random
 
 class WsMotor :
     """Class to manage Wekan Stats """
-    
+
     def __init__(self, app_name) :
         
         # Class name
@@ -59,7 +59,7 @@ class WsMotor :
         # Populate user dict
         if not event['activityType'] in self.data[ board ]['users'][ event['userId'] ]['events']['type'].keys() :
             self.data[ board ]['users'][ event['userId'] ]['events']['type'][ event['activityType'] ] = list()
-        self.data[ board ]['users'][ event['userId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])    
+        self.data[ board ]['users'][ event['userId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])
         self.data[ board ]['users'][ event['userId'] ]['events']['all'].append(event['_id'])
     
     def add_event_into_list_dic(self, board, event) :
@@ -68,7 +68,7 @@ class WsMotor :
         # Populate list dict
         if not event['activityType'] in self.data[ board ]['lists'][ event['listId'] ]['events']['type'].keys() :
             self.data[ board ]['lists'][ event['listId'] ]['events']['type'][ event['activityType'] ] = list()
-        self.data[ board ]['lists'][ event['listId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])    
+        self.data[ board ]['lists'][ event['listId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])
         self.data[ board ]['lists'][ event['listId'] ]['events']['all'].append(event['_id'])
 
     def add_event_into_card_dic(self, board, event) :
@@ -77,7 +77,7 @@ class WsMotor :
         # Populate list dict
         if not event['activityType'] in self.data[ board ]['cards'][ event['cardId'] ]['events']['type'].keys() :
             self.data[ board ]['cards'][ event['cardId'] ]['events']['type'][ event['activityType'] ] = list()
-        self.data[ board ]['cards'][ event['cardId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])    
+        self.data[ board ]['cards'][ event['cardId'] ]['events']['type'][ event['activityType'] ].append(event['_id'])
         self.data[ board ]['cards'][ event['cardId'] ]['events']['all'].append(event['_id'])
 
     def order_dic_per_cards_nb(self, board, branch) :
