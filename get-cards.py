@@ -10,19 +10,16 @@
 #! /usr/bin/python
 
 import os
-import pprint
 import argparse
 import datetime
-import operator
 import logging
 import ConfigParser
 from terminaltables import AsciiTable
 from lib.wsmotor import WsMotor
 
 def main() :
-    
+
     # Parameters
-    time_start = datetime.datetime.now()
     file_config = os.path.join(os.path.dirname(__file__), 'conf/config.ini')
     Config = ConfigParser.ConfigParser()
     Config.read(file_config)
@@ -49,7 +46,7 @@ def main() :
         
         inst_wsmotor = WsMotor(Config.get('GLOBAL','application'))
        
-        # Parse JSON Wekan URLs and populate dict 
+        # Parse JSON Wekan URLs and populate dict
         dic_wekan = dict()
         for board, url in Config.items('WEKAN_JSON') :
             # Is it board that we want ?
@@ -108,11 +105,11 @@ def main() :
         labels = ''
         for lab in dic_wekan['cards'][ v ]['labels'] :
             if labels == '' :
-                labels = dic_wekan['labels'][ lab ]['name']
+				labels = dic_wekan['labels'][ lab ]['name']
             else :
                 labels = labels + " - " + dic_wekan['labels'][ lab ]['name']
         tmpdata.append(str(labels))
-        tmpdata.append(str(dic_wekan['cards'][ v ]['created'][0:10])) # Date of creation    
+        tmpdata.append(str(dic_wekan['cards'][ v ]['created'][0:10])) # Date of creation
         tmpdata.append(str(len(dic_wekan['cards'][ v ]['events']['all']))) # Events nb
         myAsciiTableCard.append(tmpdata)
     # Total for Card

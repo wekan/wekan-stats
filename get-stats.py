@@ -10,19 +10,16 @@
 #! /usr/bin/python
 
 import os
-import pprint
 import argparse
 import datetime
-import operator
 import logging
 import ConfigParser
 from terminaltables import AsciiTable
 from lib.wsmotor import WsMotor
 
 def main() :
-    
+
     # Parameters
-    time_start = datetime.datetime.now()
     file_config = os.path.join(os.path.dirname(__file__), 'conf/config.ini')
     Config = ConfigParser.ConfigParser()
     Config.read(file_config)
@@ -46,10 +43,10 @@ def main() :
         
         inst_wsmotor = WsMotor(Config.get('GLOBAL','application'))
        
-        # Parse JSON Wekan URLs and populate dict 
+        # Parse JSON Wekan URLs and populate dict
         dic_wekan = dict()
         for board, url in Config.items('WEKAN_JSON') :
-            # Is it board that we want ?
+			# Is it board that we want ?
             if board != args.board :
                 continue
             # Populate dic
@@ -80,10 +77,10 @@ def main() :
             cards_total = cards_total + len(dic_wekan['lists'][ v ]['cards_live']) + len(dic_wekan['lists'][ v ]['cards_arch'])
             tmpdata = list()
             tmpdata.append(dic_wekan['lists'][ v ]['name']) # ListName
-            tmpdata.append(str(len(dic_wekan['lists'][ v ]['events']['all']))) # Total events 
-            tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_live']))) # Live cards    
+            tmpdata.append(str(len(dic_wekan['lists'][ v ]['events']['all']))) # Total events
+            tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_live']))) # Live cards
             tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_arch']))) # Archive cards
-            tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_arch'])+len(dic_wekan['lists'][ v ]['cards_live']))) # Total cards    
+            tmpdata.append(str(len(dic_wekan['lists'][ v ]['cards_arch'])+len(dic_wekan['lists'][ v ]['cards_live']))) # Total cards
             myAsciiTableList.append(tmpdata)
         # Total for List
         tmpdata = list()
@@ -113,9 +110,9 @@ def main() :
             cards_total = cards_total + len(dic_wekan['labels'][ v ]['cards_live']) + len(dic_wekan['labels'][ v ]['cards_arch'])
             tmpdata = list()
             tmpdata.append(dic_wekan['labels'][ v ]['name']) # ListName
-            tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_live']))) # Live cards    
+            tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_live']))) # Live cards
             tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_arch']))) # Archive cards
-            tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_arch'])+len(dic_wekan['labels'][ v ]['cards_live']))) # Total cards    
+            tmpdata.append(str(len(dic_wekan['labels'][ v ]['cards_arch'])+len(dic_wekan['labels'][ v ]['cards_live']))) # Total cards
             myAsciiTableLabel.append(tmpdata)
         # Total for Label
         tmpdata = list()
@@ -148,8 +145,8 @@ def main() :
             cards_total = cards_total + len(dic_wekan['users'][ v ]['cards_live']) + len(dic_wekan['users'][ v ]['cards_arch'])
             tmpdata = list()
             tmpdata.append(dic_wekan['users'][ v ]['username']) # Username
-            tmpdata.append(str(len(dic_wekan['users'][ v ]['events']['all']))) # Total events 
-            tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_live']))) # Live cards    
+            tmpdata.append(str(len(dic_wekan['users'][ v ]['events']['all']))) # Total events
+            tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_live']))) # Live cards
             tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_arch']))) # Archive cards
             tmpdata.append(str(len(dic_wekan['users'][ v ]['cards_arch'])+len(dic_wekan['users'][ v ]['cards_live']))) # Total cards
             
@@ -178,7 +175,7 @@ def main() :
             events_total = events_total + len(dic_wekan['events']['type'][ k ])
             tmpdata = list()
             tmpdata.append(k) # Event name
-            tmpdata.append(str(len(dic_wekan['events']['type'][ k ]))) # Events count    
+            tmpdata.append(str(len(dic_wekan['events']['type'][ k ]))) # Events count
             myAsciiEventLabel.append(tmpdata)
         # Total for Events
         tmpdata = list()
