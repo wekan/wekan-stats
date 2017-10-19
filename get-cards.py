@@ -105,7 +105,7 @@ def main() :
         labels = ''
         for lab in dic_wekan['cards'][ v ]['labels'] :
             if labels == '' :
-				labels = dic_wekan['labels'][ lab ]['name']
+                labels = dic_wekan['labels'][ lab ]['name']
             else :
                 labels = labels + " - " + dic_wekan['labels'][ lab ]['name']
         tmpdata.append(str(labels))
