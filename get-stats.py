@@ -46,7 +46,7 @@ def main() :
         # Parse JSON Wekan URLs and populate dict
         dic_wekan = dict()
         for board, url in Config.items('WEKAN_JSON') :
-			# Is it board that we want ?
+            # Is it board that we want ?
             if board != args.board :
                 continue
             # Populate dic
